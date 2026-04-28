@@ -1,0 +1,195 @@
+/* WalkthroughPage Styles */
+.walkthrough-page {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+}
+
+.walkthrough-header {
+  text-align: center;
+  margin-bottom: var(--space-12);
+}
+
+.walkthrough-header h1 {
+  margin-bottom: var(--space-4);
+}
+
+.walkthrough-header p {
+  color: var(--color-text-secondary);
+  font-size: var(--text-lg);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Progress */
+.walkthrough-progress {
+  max-width: 600px;
+  margin: 0 auto var(--space-10);
+}
+
+.walkthrough-progress-steps {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: var(--space-3);
+}
+
+.walkthrough-progress-steps::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--color-border);
+  transform: translateY(-50%);
+}
+
+.progress-step-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  z-index: 2;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: 3px solid var(--color-bg);
+}
+
+.progress-step-dot-active {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: var(--shadow-glow);
+}
+
+.progress-step-dot-completed {
+  background: var(--color-success);
+  color: white;
+}
+
+.progress-step-dot-upcoming {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-tertiary);
+  border-color: var(--color-border);
+}
+
+/* Step card */
+.step-detail {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.step-detail-card {
+  padding: var(--space-8);
+  margin-bottom: var(--space-6);
+}
+
+.step-detail-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.step-detail-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-xl);
+  background: var(--color-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+.step-detail-meta h2 {
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-1);
+}
+
+.step-detail-meta p {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+/* ELI5 Toggle */
+.eli5-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  padding: var(--space-3) var(--space-5);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  width: fit-content;
+}
+
+.eli5-toggle-label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.eli5-toggle-label.active {
+  color: var(--color-primary);
+  font-weight: var(--weight-semibold);
+}
+
+.step-content {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-secondary);
+  white-space: pre-line;
+}
+
+.step-content strong {
+  color: var(--color-text);
+}
+
+/* Key facts */
+.step-facts {
+  margin-top: var(--space-6);
+  padding: var(--space-5);
+  background: var(--color-primary-light);
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--color-primary);
+}
+
+.step-facts h4 {
+  font-size: var(--text-base);
+  margin-bottom: var(--space-3);
+  color: var(--color-primary);
+}
+
+.step-facts ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.step-facts li {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  padding-left: var(--space-4);
+  position: relative;
+}
+
+.step-facts li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--color-primary);
+  font-weight: bold;
+}
+
+/* Navigation */
+.step-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
