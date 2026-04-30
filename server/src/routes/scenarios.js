@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { sanitizerMiddleware, detectInjection } from '../middleware/sanitizer.js';
-import { getScenarioResponse } from '../services/geminiService.js';
+import { getScenarioResponse } from '../services/aiService.js';
 
 const router = Router();
 router.use(sanitizerMiddleware);

@@ -1,4 +1,4 @@
-import { model, isAIAvailable } from '../config/gemini.js';
+import { groq, isAIAvailable } from '../config/groq.js';
 import { SYSTEM_PROMPT, ELI5_WRAPPER, DETAILED_WRAPPER, SCENARIO_PROMPT } from '../prompts/templates.js';
 
 /**
@@ -37,20 +37,24 @@ export async function getChatResponse(message, options = {}) {
       userPrompt = DETAILED_WRAPPER(message);
     }
 
-    // Create chat session with history
-    const chat = model.startChat({
-      history: [
-        { role: 'user', parts: [{ text: 'What are you?' }] },
-        { role: 'model', parts: [{ text: SYSTEM_PROMPT }] },
-        ...history.map((msg) => ({
-          role: msg.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: msg.content }],
-        })),
-      ],
+    // Prepare Groq messages
+    const messages = [
+      { role: 'system', content: SYSTEM_PROMPT },
+      ...history.map((msg) => ({
+        role: msg.role === 'assistant' ? 'assistant' : 'user',
+        content: msg.content,
+      })),
+      { role: 'user', content: userPrompt }
+    ];
+
+    const chatCompletion = await groq.chat.completions.create({
+      messages,
+      model: 'llama-3.3-70b-versatile',
+      temperature: 0.5,
+      max_tokens: 1024,
     });
 
-    const result = await chat.sendMessage(userPrompt);
-    const response = result.response.text();
+    const response = chatCompletion.choices[0]?.message?.content || "I'm sorry, I couldn't generate a response.";
 
     // Cache the response
     responseCache.set(cacheKey, { response, timestamp: Date.now() });
@@ -65,7 +69,7 @@ export async function getChatResponse(message, options = {}) {
 
     return response;
   } catch (error) {
-    console.error('[Gemini Error]', error.message);
+    console.error('[Groq Error]', error.message);
     return getFallbackResponse(message);
   }
 }
@@ -79,18 +83,24 @@ export async function getScenarioResponse(scenario, country = 'India') {
   }
 
   try {
-    const result = await model.generateContent(
-      SYSTEM_PROMPT + '\n\n' + SCENARIO_PROMPT(scenario, country)
-    );
-    return result.response.text();
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: SCENARIO_PROMPT(scenario, country) }
+      ],
+      model: 'llama-3.3-70b-versatile',
+      temperature: 0.7,
+      max_tokens: 1024,
+    });
+    return chatCompletion.choices[0]?.message?.content || "Scenario analysis unavailable.";
   } catch (error) {
-    console.error('[Gemini Scenario Error]', error.message);
+    console.error('[Groq Scenario Error]', error.message);
     return getFallbackResponse(scenario);
   }
 }
 
 /**
- * Fallback responses when Gemini is unavailable
+ * Fallback responses when Groq is unavailable
  */
 function getFallbackResponse(query) {
   const q = query.toLowerCase();

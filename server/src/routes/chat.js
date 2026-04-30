@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { rateLimit } from 'express-rate-limit';
 import { sanitizerMiddleware, detectInjection } from '../middleware/sanitizer.js';
-import { getChatResponse } from '../services/geminiService.js';
+import { getChatResponse } from '../services/aiService.js';
 
 const router = Router();
 
