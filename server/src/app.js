@@ -9,6 +9,8 @@ import { rateLimit } from 'express-rate-limit';
 import chatRoutes from './routes/chat.js';
 import timelineRoutes from './routes/timeline.js';
 import scenarioRoutes from './routes/scenarios.js';
+import pollingRoutes from './routes/polling.js';
+import translateRoutes from './routes/translate.js';
 
 dotenv.config();
 
@@ -46,6 +48,8 @@ app.get('/api/health', (req, res) => {
 app.use('/api/chat', chatRoutes);
 app.use('/api/timeline', timelineRoutes);
 app.use('/api/scenarios', scenarioRoutes);
+app.use('/api/polling', pollingRoutes);
+app.use('/api/translate', translateRoutes);
 
 // ---- Global Error Handler ----
 app.use((err, req, res, next) => {

@@ -1,52 +1,84 @@
+import { useState, useEffect, useRef } from 'react';
 import './ChatBubble.css';
 
-/**
- * ChatBubble — Renders user or assistant messages
- */
-export default function ChatBubble({ message, isUser = false }) {
-  const time = message.timestamp
-    ? new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    : '';
+export default function ChatBubble({ message, isUser }) {
+  const [displayedContent, setDisplayedContent] = useState(isUser ? message.contentHtml : '');
+  const contentRef = useRef(message.contentHtml);
+  
+  useEffect(() => {
+    if (isUser) {
+      setDisplayedContent(message.contentHtml);
+      return;
+    }
+
+    // Reset if content changes
+    if (contentRef.current !== message.contentHtml) {
+      contentRef.current = message.contentHtml;
+      setDisplayedContent('');
+    }
+
+    // Streaming simulation
+    let currentIndex = 0;
+    const fullText = message.contentHtml;
+    
+    // Determine speed - faster for longer messages
+    const speed = fullText.length > 500 ? 5 : fullText.length > 200 ? 10 : 20;
+
+    const interval = setInterval(() => {
+      if (currentIndex <= fullText.length) {
+        // Find next HTML tag to skip typing effect inside tags
+        if (fullText[currentIndex] === '<') {
+          const closingIndex = fullText.indexOf('>', currentIndex);
+          if (closingIndex !== -1) {
+            currentIndex = closingIndex + 1;
+          }
+        }
+        
+        setDisplayedContent(fullText.substring(0, currentIndex));
+        currentIndex++;
+      } else {
+        clearInterval(interval);
+      }
+    }, speed);
+
+    return () => clearInterval(interval);
+  }, [message.contentHtml, isUser]);
 
   return (
-    <div
-      className={`chat-bubble ${isUser ? 'chat-bubble-user' : 'chat-bubble-assistant'}`}
-      role="article"
-      aria-label={`${isUser ? 'Your' : 'CivicQ'} message`}
-    >
-      <div className={`chat-avatar ${isUser ? 'chat-avatar-user' : 'chat-avatar-assistant'}`} aria-hidden="true">
-        {isUser ? '👤' : '🏛️'}
-      </div>
-      <div>
-        <div className="chat-content">
-          {typeof message.content === 'string' ? (
-            <div dangerouslySetInnerHTML={{ __html: message.contentHtml || message.content }} />
-          ) : (
-            message.content
-          )}
-          {message.card && (
-            <div className="chat-card-embed" role="button" tabIndex={0}>
-              {message.card}
-            </div>
-          )}
+    <div className={`chat-bubble ${isUser ? 'chat-bubble-user' : 'chat-bubble-assistant'}`}>
+      {!isUser && (
+        <div className="chat-avatar chat-avatar-assistant" aria-hidden="true">
+          🏛️
         </div>
-        {time && <div className="chat-timestamp">{time}</div>}
+      )}
+      <div>
+        <div 
+          className="chat-content"
+          dangerouslySetInnerHTML={{ __html: displayedContent || (isUser ? '' : '<span class="typing-cursor"></span>') }}
+        />
+        <div className="chat-timestamp">
+          {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        </div>
       </div>
+      {isUser && (
+        <div className="chat-avatar chat-avatar-user" aria-hidden="true">
+          👤
+        </div>
+      )}
     </div>
   );
 }
 
-/** Typing indicator component */
 export function TypingIndicator() {
   return (
-    <div className="chat-bubble chat-bubble-assistant" role="status" aria-label="CivicQ is typing">
-      <div className="chat-avatar chat-avatar-assistant" aria-hidden="true">🏛️</div>
-      <div className="chat-content">
-        <div className="typing-indicator">
-          <span className="typing-dot" />
-          <span className="typing-dot" />
-          <span className="typing-dot" />
-        </div>
+    <div className="chat-bubble chat-bubble-assistant">
+      <div className="chat-avatar chat-avatar-assistant" aria-hidden="true">
+        🏛️
+      </div>
+      <div className="chat-content typing-indicator">
+        <span className="typing-dot" />
+        <span className="typing-dot" />
+        <span className="typing-dot" />
       </div>
     </div>
   );

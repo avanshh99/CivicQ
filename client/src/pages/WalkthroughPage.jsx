@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Confetti from 'react-confetti';
 import Button from '../components/Button/Button.jsx';
 import Card from '../components/Card/Card.jsx';
 import { ProgressBar } from '../components/Badge/Badge.jsx';
@@ -9,9 +10,17 @@ export default function WalkthroughPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [eli5Mode, setEli5Mode] = useState(false);
   const [completedSteps, setCompletedSteps] = useState(new Set());
+  const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+
+  useEffect(() => {
+    const handleResize = () => setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const step = ELECTION_STEPS[currentStep];
   const progress = (completedSteps.size / ELECTION_STEPS.length) * 100;
+  const isCompleted = progress === 100;
 
   const goToStep = (idx) => {
     setCurrentStep(idx);
@@ -36,6 +45,15 @@ export default function WalkthroughPage() {
 
   return (
     <main className="walkthrough-page" role="main" aria-label="Election walkthrough">
+      {isCompleted && (
+        <Confetti 
+          width={windowSize.width} 
+          height={windowSize.height} 
+          recycle={false} 
+          numberOfPieces={400} 
+          gravity={0.15}
+        />
+      )}
       <header className="walkthrough-header">
         <h1>
           <span className="heading-neuro">Election Process</span>{' '}

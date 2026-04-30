@@ -1,79 +1,84 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import './Card.css';
 
-/**
- * Card — Multi-variant card component
- * Variants: default, glass, bento, neuro
- */
-export default function Card({
-  children,
-  variant = 'glass',
+export default function Card({ 
+  children, 
+  variant = 'bento', 
+  glow = false,
   interactive = false,
   className = '',
-  glow = false,
   onClick,
   ariaLabel,
   role,
   ...props
 }) {
   const cardRef = useRef(null);
+  const [style, setStyle] = useState({});
 
   const handleMouseMove = (e) => {
-    if (!glow || !cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    cardRef.current.style.setProperty('--mouse-x', `${x}%`);
-    cardRef.current.style.setProperty('--mouse-y', `${y}%`);
+    if (!cardRef.current) return;
+    
+    if (glow) {
+      const rect = cardRef.current.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      cardRef.current.style.setProperty('--mouse-x', `${x}%`);
+      cardRef.current.style.setProperty('--mouse-y', `${y}%`);
+    }
+
+    if (interactive) {
+      const rect = cardRef.current.getBoundingClientRect();
+      const width = rect.width;
+      const height = rect.height;
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      
+      const rotateY = ((mouseX / width) - 0.5) * 10;
+      const rotateX = ((mouseY / height) - 0.5) * -10;
+      
+      setStyle({
+        transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`,
+        transition: 'transform 0.1s ease'
+      });
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (interactive) {
+      setStyle({
+        transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
+        transition: 'transform 0.5s ease'
+      });
+    }
   };
 
   const classes = [
     'card',
-    variant !== 'default' ? `card-${variant}` : '',
-    interactive ? 'card-interactive' : '',
-    glow ? 'card-glow' : '',
+    `card-${variant}`,
+    glow && 'card-glow-enabled',
+    interactive && 'card-interactive',
     className,
   ].filter(Boolean).join(' ');
 
-  const Tag = onClick ? 'button' : 'div';
+  const Component = onClick ? 'button' : 'div';
 
   return (
-    <Tag
+    <Component
       ref={cardRef}
       className={classes}
-      onClick={onClick}
       onMouseMove={handleMouseMove}
-      role={role || (onClick ? 'button' : undefined)}
+      onMouseLeave={handleMouseLeave}
+      onClick={onClick}
       aria-label={ariaLabel}
+      style={style}
+      role={role || (onClick ? 'button' : undefined)}
       tabIndex={onClick ? 0 : undefined}
       {...props}
     >
-      {children}
-    </Tag>
+      {glow && <div className="card-glow-bg" aria-hidden="true" />}
+      <div className="card-content">
+        {children}
+      </div>
+    </Component>
   );
-}
-
-/* Sub-components */
-export function CardHeader({ children, className = '' }) {
-  return <div className={`card-header ${className}`}>{children}</div>;
-}
-
-export function CardIcon({ children, color = 'primary', className = '' }) {
-  return (
-    <div className={`card-icon card-icon-${color} ${className}`} aria-hidden="true">
-      {children}
-    </div>
-  );
-}
-
-export function CardTitle({ children, className = '' }) {
-  return <h3 className={`card-title ${className}`}>{children}</h3>;
-}
-
-export function CardDescription({ children, className = '' }) {
-  return <p className={`card-description ${className}`}>{children}</p>;
-}
-
-export function CardFooter({ children, className = '' }) {
-  return <div className={`card-footer ${className}`}>{children}</div>;
 }
