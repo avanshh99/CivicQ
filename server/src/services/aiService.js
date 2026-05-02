@@ -51,7 +51,7 @@ export async function getChatResponse(message, options = {}) {
       messages,
       model: 'llama-3.3-70b-versatile',
       temperature: 0.5,
-      max_tokens: 1024,
+      max_tokens: 2048,
     });
 
     const response = chatCompletion.choices[0]?.message?.content || "I'm sorry, I couldn't generate a response.";

@@ -480,7 +480,21 @@
   border-radius: var(--radius-md);
 }
 .report-narrative h4 { font-size: var(--text-sm); margin-bottom: var(--space-2); }
-.report-narrative p { font-size: var(--text-sm); color: var(--color-text); line-height: 1.7; margin: 0; }
+.report-narrative p { font-size: var(--text-sm); color: var(--color-text); line-height: 1.7; margin: 0 0 var(--space-1) 0; }
+
+/* Raw text fallback report (when AI returns prose instead of JSON) */
+.raw-report {
+  max-height: 600px;
+  overflow-y: auto;
+}
+.raw-report h3 { font-size: var(--text-base); color: var(--color-text); margin: var(--space-4) 0 var(--space-2) 0; }
+.raw-report h4 { font-size: var(--text-sm); color: var(--color-primary); margin: var(--space-4) 0 var(--space-2) 0; }
+.raw-report strong { color: var(--color-text); }
+.report-bullet {
+  padding-left: var(--space-4);
+  position: relative;
+  color: var(--color-text-secondary);
+}
 
 .report-recs h4 { font-size: var(--text-sm); margin-bottom: var(--space-3); }
 .report-recs ul { list-style: none; display: flex; flex-direction: column; gap: var(--space-2); }
