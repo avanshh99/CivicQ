@@ -36,6 +36,8 @@ export default function PollingPage() {
   const [stations, setStations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [hasLocation, setHasLocation] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const fetchStations = async (lat, lng) => {
     setLoading(true);
@@ -51,6 +53,33 @@ export default function PollingPage() {
       console.error('Failed to fetch stations:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSearch = async (e) => {
+    if (e) e.preventDefault();
+    if (!searchQuery.trim()) return;
+
+    setSearchLoading(true);
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&limit=1`);
+      const data = await response.json();
+
+      if (data && data.length > 0) {
+        const { lat, lon } = data[0];
+        const newLat = parseFloat(lat);
+        const newLon = parseFloat(lon);
+        setLocation([newLat, newLon]);
+        setHasLocation(true);
+        fetchStations(newLat, newLon);
+      } else {
+        alert('Location not found. Please try a different search term.');
+      }
+    } catch (error) {
+      console.error('Geocoding error:', error);
+      alert('Failed to search location. Please try again.');
+    } finally {
+      setSearchLoading(false);
     }
   };
 
@@ -84,13 +113,33 @@ export default function PollingPage() {
           <span className="text-gradient">Polling Station</span>
         </h1>
         <p className="polling-subtitle">
-          Locate your nearest polling station using OpenStreetMap. Allow browser geolocation to find booths near you.
+          Locate your nearest polling station using OpenStreetMap. Search for your area or allow browser geolocation.
         </p>
-        {!hasLocation && (
-          <Button variant="primary" onClick={locateUser} disabled={loading} style={{ marginTop: '1rem' }}>
-            {loading ? 'Locating...' : '📍 Find My Nearest Polling Station'}
+
+        <form className="polling-search-bar" onSubmit={handleSearch}>
+          <input
+            type="text"
+            placeholder="Search location (e.g. Kothagudem, Telangana)"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            disabled={searchLoading || loading}
+          />
+          <Button 
+            type="submit" 
+            variant="primary" 
+            disabled={searchLoading || loading || !searchQuery.trim()}
+          >
+            {searchLoading ? 'Searching...' : 'Search'}
           </Button>
-        )}
+        </form>
+
+        <div className="polling-actions">
+          {!hasLocation && (
+            <Button variant="secondary" onClick={locateUser} disabled={loading || searchLoading}>
+              {loading ? 'Locating...' : '📍 Use My Current Location'}
+            </Button>
+          )}
+        </div>
       </header>
 
       <div className="polling-content">

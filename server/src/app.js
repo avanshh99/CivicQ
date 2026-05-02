@@ -26,8 +26,16 @@ loadPollingData();
 app.use(helmet({
   contentSecurityPolicy: false, // Allow inline styles for dev
 }));
+const ALLOWED_ORIGINS = [CLIENT_URL, 'http://127.0.0.1:5173'];
+
 app.use(cors({
-  origin: CLIENT_URL,
+  origin: (origin, callback) => {
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 app.use(compression());

@@ -16,7 +16,42 @@
   color: var(--color-text-secondary);
   font-size: var(--text-lg);
   max-width: 600px;
-  margin: 0 auto;
+  margin: 0 auto var(--space-6);
+}
+
+.polling-search-bar {
+  display: flex;
+  gap: var(--space-3);
+  max-width: 600px;
+  margin: 0 auto var(--space-4);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  padding: var(--space-2);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+}
+
+.polling-search-bar input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  outline: none;
+}
+
+.polling-search-bar input::placeholder {
+  color: var(--color-text-secondary);
+  opacity: 0.6;
+}
+
+.polling-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
 }
 
 .polling-map-container {

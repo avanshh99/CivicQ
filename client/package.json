@@ -20,7 +20,8 @@
     "react-leaflet": "^5.0.0",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.14.2",
-    "react-use": "^17.6.0"
+    "react-use": "^17.6.0",
+    "tesseract.js": "^7.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

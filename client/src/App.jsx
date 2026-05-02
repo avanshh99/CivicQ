@@ -13,6 +13,7 @@ const WalkthroughPage = lazy(() => import('./pages/WalkthroughPage.jsx'));
 const TimelinePage = lazy(() => import('./pages/TimelinePage.jsx'));
 const ScenariosPage = lazy(() => import('./pages/ScenariosPage.jsx'));
 const PollingPage = lazy(() => import('./pages/PollingPage.jsx'));
+const RegistrationPage = lazy(() => import('./pages/RegistrationPage.jsx'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage.jsx'));
 const LoginPage = lazy(() => import('./pages/LoginPage.jsx'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage.jsx'));
@@ -60,6 +61,7 @@ function AppShell() {
             <Route path="/timeline" element={<TimelinePage />} />
             <Route path="/scenarios" element={<ScenariosPage />} />
             <Route path="/polling" element={<PollingPage />} />
+            <Route path="/registration" element={<RegistrationPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="*" element={<NotFoundPage />} />

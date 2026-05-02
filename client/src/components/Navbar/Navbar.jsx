@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { path: '/timeline', label: 'Timeline', icon: '📅' },
   { path: '/scenarios', label: 'Scenarios', icon: '🔮' },
   { path: '/polling', label: 'Polling', icon: '📍' },
+  { path: '/registration', label: 'Registration Hub', icon: '📝' },
 ];
 
 export default function Navbar({ user, onLogout }) {
