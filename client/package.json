@@ -12,10 +12,12 @@
   "dependencies": {
     "dompurify": "^3.4.1",
     "firebase": "^12.12.1",
+    "leaflet": "^1.9.4",
     "marked": "^18.0.2",
     "react": "^19.2.5",
     "react-confetti": "^6.4.0",
     "react-dom": "^19.2.5",
+    "react-leaflet": "^5.0.0",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.14.2",
     "react-use": "^17.6.0"

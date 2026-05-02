@@ -14,9 +14,13 @@ import translateRoutes from './routes/translate.js';
 
 dotenv.config();
 
+import { loadPollingData } from './services/pollingService.js';
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
+
+loadPollingData();
 
 // ---- Security Middleware ----
 app.use(helmet({
