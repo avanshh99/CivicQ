@@ -3,4 +3,5 @@ dist/
 .env
 *.local
 .DS_Store
+out.csv
 coverage/
