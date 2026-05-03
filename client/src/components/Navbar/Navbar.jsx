@@ -1,21 +1,31 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import ThemeToggle from '../ThemeToggle/ThemeToggle.jsx';
 import './Navbar.css';
 
 const NAV_ITEMS = [
-  { path: '/', label: 'Home', icon: '🏠' },
-  { path: '/chat', label: 'Ask CivicQ', icon: '💬' },
-  { path: '/walkthrough', label: 'Learn', icon: '📖' },
-  { path: '/timeline', label: 'Timeline', icon: '📅' },
-  { path: '/scenarios', label: 'Scenarios', icon: '🔮' },
-  { path: '/polling', label: 'Polling', icon: '📍' },
-  { path: '/registration', label: 'Registration Hub', icon: '📝' },
+  { path: '/', labelKey: 'nav.home', icon: '🏠' },
+  { path: '/chat', labelKey: 'nav.chat', icon: '💬' },
+  { path: '/walkthrough', labelKey: 'nav.walkthrough', icon: '📖' },
+  { path: '/timeline', labelKey: 'nav.timeline', icon: '📅' },
+  { path: '/scenarios', labelKey: 'nav.scenarios', icon: '🔮' },
+  { path: '/polling', labelKey: 'nav.polling', icon: '📍' },
+  { path: '/registration', labelKey: 'nav.registration', icon: '📝' },
+];
+
+const LANGUAGES = [
+  { code: 'en', name: 'English' },
+  { code: 'hi', name: 'हिंदी' },
+  { code: 'mr', name: 'मराठी' },
+  { code: 'gu', name: 'ગુજરાતી' },
+  { code: 'kn', name: 'ಕನ್ನಡ' }
 ];
 
 export default function Navbar({ user, onLogout }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const { t, i18n } = useTranslation();
 
   const isActive = (path) => location.pathname === path;
 
@@ -34,12 +44,26 @@ export default function Navbar({ user, onLogout }) {
             className={`navbar-link ${isActive(item.path) ? 'active' : ''}`}
             aria-current={isActive(item.path) ? 'page' : undefined}
           >
-            {item.label}
+            {t(item.labelKey)}
           </Link>
         ))}
       </div>
 
       <div className="navbar-actions">
+        <select 
+          className="language-selector"
+          value={i18n.language.split('-')[0]}
+          onChange={(e) => i18n.changeLanguage(e.target.value)}
+          aria-label={t('nav.language')}
+          title={t('nav.language')}
+        >
+          {LANGUAGES.map(lang => (
+            <option key={lang.code} value={lang.code}>
+              {lang.name}
+            </option>
+          ))}
+        </select>
+
         <ThemeToggle />
         {user ? (
           <button
@@ -51,7 +75,7 @@ export default function Navbar({ user, onLogout }) {
             {(user.displayName || user.email || 'U')[0].toUpperCase()}
           </button>
         ) : (
-          <Link to="/login" className="btn btn-primary btn-sm">Sign In</Link>
+          <Link to="/login" className="btn btn-primary btn-sm">{t('nav.signIn')}</Link>
         )}
       </div>
 
@@ -72,7 +96,7 @@ export default function Navbar({ user, onLogout }) {
             className={`navbar-mobile-link ${isActive(item.path) ? 'active' : ''}`}
             onClick={() => setMobileOpen(false)}
           >
-            <span aria-hidden="true">{item.icon}</span> {item.label}
+            <span aria-hidden="true">{item.icon}</span> {t(item.labelKey)}
           </Link>
         ))}
       </div>

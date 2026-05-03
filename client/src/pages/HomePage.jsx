@@ -1,25 +1,28 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Button from '../components/Button/Button.jsx';
 import Card from '../components/Card/Card.jsx';
 import './HomePage.css';
 
-const FEATURES = [
-  { icon: '💬', title: 'AI Chat Assistant', desc: 'Ask anything about elections. Get clear, accurate answers powered by AI with follow-up support.', color: 'primary', large: true },
-  { icon: '📖', title: 'Step-by-Step Guide', desc: 'Walk through the entire election process from registration to results.', color: 'secondary' },
-  { icon: '📅', title: 'Interactive Timeline', desc: 'Visual election timelines with key dates, deadlines, and milestones.', color: 'tertiary' },
-  { icon: '🔮', title: 'Scenario Simulator', desc: '"What if I miss registration?" Explore real scenarios and consequences.', color: 'primary' },
-  { icon: '📍', title: 'Polling Finder', desc: 'Find your nearest polling station with Google Maps integration.', color: 'secondary', large: true },
-  { icon: '🏆', title: 'Track Progress', desc: 'Earn badges as you learn. Track your civic knowledge journey.', color: 'tertiary' },
-];
-
-const STATS = [
-  { value: '900M+', label: 'Voters in India' },
-  { value: '1M+', label: 'Polling Stations' },
-  { value: '543', label: 'Constituencies' },
-  { value: '2,600+', label: 'Political Parties' },
-];
-
 export default function HomePage() {
+  const { t } = useTranslation();
+
+  const FEATURES = [
+    { icon: '💬', title: t('home.features.f1Title'), desc: t('home.features.f1Desc'), color: 'primary', large: true },
+    { icon: '📖', title: t('home.features.f2Title'), desc: t('home.features.f2Desc'), color: 'secondary' },
+    { icon: '📅', title: t('home.features.f3Title'), desc: t('home.features.f3Desc'), color: 'tertiary' },
+    { icon: '🔮', title: t('home.features.f4Title'), desc: t('home.features.f4Desc'), color: 'primary' },
+    { icon: '📍', title: t('home.features.f5Title'), desc: t('home.features.f5Desc'), color: 'secondary', large: true },
+    { icon: '🏆', title: t('home.features.f6Title'), desc: t('home.features.f6Desc'), color: 'tertiary' },
+  ];
+
+  const STATS = [
+    { value: t('home.stats.s1Value'), label: t('home.stats.s1Label') },
+    { value: t('home.stats.s2Value'), label: t('home.stats.s2Label') },
+    { value: t('home.stats.s3Value'), label: t('home.stats.s3Label') },
+    { value: t('home.stats.s4Value'), label: t('home.stats.s4Label') },
+  ];
+
   return (
     <main className="home">
       {/* Hero */}
@@ -35,28 +38,27 @@ export default function HomePage() {
         <div className="hero-content">
           <div className="hero-badge">
             <span>🏛️</span>
-            <span>AI-Powered Election Assistant</span>
+            <span>{t('home.heroBadge')}</span>
           </div>
 
           <h1 id="hero-title" className="hero-title">
-            Understand Elections<br />
-            <span className="hero-title-accent">Like Never Before</span>
+            {t('home.heroTitle1')}<br />
+            <span className="hero-title-accent">{t('home.heroTitle2')}</span>
           </h1>
 
           <p className="hero-subtitle">
-            Your intelligent guide to the democratic process. Learn about voter registration,
-            voting procedures, timelines, and more — all in simple, clear language.
+            {t('home.heroSubtitle')}
           </p>
 
           <div className="hero-actions">
             <Link to="/chat">
               <Button variant="neuro" size="lg" icon="💬">
-                Ask CivicQ
+                {t('home.askBtn')}
               </Button>
             </Link>
             <Link to="/walkthrough">
               <Button variant="glass" size="lg" icon="📖">
-                Start Learning
+                {t('home.startBtn')}
               </Button>
             </Link>
           </div>
@@ -66,10 +68,10 @@ export default function HomePage() {
       {/* Features */}
       <section className="features-section" aria-labelledby="features-title">
         <h2 id="features-title" className="features-section-title heading-neuro">
-          Everything You Need
+          {t('home.featuresTitle')}
         </h2>
         <p className="features-section-subtitle">
-          Interactive tools designed to make civic education accessible and engaging for everyone.
+          {t('home.featuresSubtitle')}
         </p>
 
         <div className="features-bento stagger-children">
@@ -105,11 +107,11 @@ export default function HomePage() {
       {/* CTA */}
       <section className="cta-section" aria-labelledby="cta-title">
         <div className="cta-card">
-          <h2 id="cta-title">Ready to Become a Civic Expert?</h2>
-          <p>Start your journey to understanding democracy. Ask questions, explore timelines, and earn your civic badges.</p>
+          <h2 id="cta-title">{t('home.ctaTitle')}</h2>
+          <p>{t('home.ctaDesc')}</p>
           <Link to="/chat">
             <Button variant="glass" size="lg" icon="🚀">
-              Get Started Free
+              {t('home.ctaBtn')}
             </Button>
           </Link>
         </div>

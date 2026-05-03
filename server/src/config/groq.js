@@ -10,9 +10,6 @@ if (GROQ_API_KEY) {
   groq = new Groq({
     apiKey: GROQ_API_KEY,
   });
-  console.log('✅ Groq AI initialized');
-} else {
-  console.log('⚠️  No Groq API key found. Using fallback responses.');
 }
 
 export { groq };

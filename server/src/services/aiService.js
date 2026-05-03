@@ -15,10 +15,10 @@ function getCacheKey(message) {
  * Get AI chat response
  */
 export async function getChatResponse(message, options = {}) {
-  const { mode = 'normal', history = [] } = options;
+  const { mode = 'normal', history = [], language = 'en' } = options;
 
-  // Check cache first
-  const cacheKey = getCacheKey(message);
+  // Check cache first (include language in key)
+  const cacheKey = `${getCacheKey(message)}_${language}_${mode}`;
   const cached = responseCache.get(cacheKey);
   if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
     return cached.response;
@@ -37,9 +37,12 @@ export async function getChatResponse(message, options = {}) {
       userPrompt = DETAILED_WRAPPER(message);
     }
 
+    // Append language constraint to system prompt
+    const localizedSystemPrompt = `${SYSTEM_PROMPT}\n\nIMPORTANT INSTRUCTION: You MUST reply entirely in the language corresponding to the ISO code: '${language}'. For example, if the code is 'hi', reply in Hindi. If 'mr', reply in Marathi.`;
+
     // Prepare Groq messages
     const messages = [
-      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'system', content: localizedSystemPrompt },
       ...history.map((msg) => ({
         role: msg.role === 'assistant' ? 'assistant' : 'user',
         content: msg.content,

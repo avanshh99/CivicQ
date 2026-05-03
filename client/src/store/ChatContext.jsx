@@ -1,5 +1,5 @@
 import { createContext, useState, useCallback } from 'react';
-
+import { useTranslation } from 'react-i18next';
 export const ChatContext = createContext({
   messages: [],
   isLoading: false,
@@ -14,6 +14,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
  * Falls back to built-in responses when backend is unavailable
  */
 export function ChatProvider({ children }) {
+  const { i18n } = useTranslation();
   const [messages, setMessages] = useState([
     {
       id: 'welcome',
@@ -71,7 +72,7 @@ export function ChatProvider({ children }) {
       const res = await fetch(`${API_URL}/api/chat/message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: content }),
+        body: JSON.stringify({ message: content, language: i18n.language }),
       });
 
       if (res.ok) {
@@ -98,7 +99,7 @@ export function ChatProvider({ children }) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [i18n.language]);
 
   const clearMessages = useCallback(() => {
     setMessages([{

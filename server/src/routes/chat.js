@@ -21,7 +21,7 @@ router.use(sanitizerMiddleware);
  */
 router.post('/message', async (req, res, next) => {
   try {
-    const { message, mode, history } = req.body;
+    const { message, mode, history, language } = req.body;
 
     if (!message || typeof message !== 'string' || message.trim().length === 0) {
       return res.status(400).json({ error: 'Message is required' });
@@ -38,6 +38,7 @@ router.post('/message', async (req, res, next) => {
     const response = await getChatResponse(message.trim(), {
       mode: mode || 'normal',
       history: Array.isArray(history) ? history.slice(-10) : [], // Last 10 messages for context
+      language: language || 'en',
     });
 
     res.json({

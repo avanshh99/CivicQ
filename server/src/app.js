@@ -80,7 +80,7 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`CivicQ API running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
   console.log(`Accepting requests from ${CLIENT_URL}`);
 });
 

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './store/ThemeContext.jsx';
 import { AuthProvider, AuthContext } from './store/AuthContext.jsx';
 import { ChatProvider } from './store/ChatContext.jsx';
+import './i18n.js';
 import Navbar from './components/Navbar/Navbar.jsx';
 import './styles/index.css';
 

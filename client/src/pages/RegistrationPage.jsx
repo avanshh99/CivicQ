@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { createWorker } from 'tesseract.js';
 import * as pdfjsLib from 'pdfjs-dist';
 import pdfjsWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
@@ -185,7 +186,17 @@ function ReviewReport({ data }) {
 }
 
 export default function RegistrationPage() {
+  const { t } = useTranslation();
   const [step, setStep] = useState(0);
+
+  // We move FORM_STEPS inside the component to use the translation hook
+  const FORM_STEPS = [
+    { id: 'personal', title: t('registrationPage.formDetails'), icon: '👤' },
+    { id: 'address', title: 'Address & Residence', icon: '🏠' },
+    { id: 'documents', title: t('registrationPage.docUploadTitle'), icon: '📄' },
+    { id: 'review', title: t('registrationPage.aiAnalysis'), icon: '🤖' }
+  ];
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -664,8 +675,8 @@ Respond with this exact JSON structure:
                 ) : (
                   <div className="upload-prompt">
                     <span className="upload-icon">📁</span>
-                    <span>Click to Upload ID Document</span>
-                    <span className="upload-hint">JPG, PNG, or PDF • Max 10MB • AI will scan for verification</span>
+                    <span>{t('registrationPage.dragDrop')}</span>
+                    <span className="upload-hint">{t('registrationPage.supportedFormats')}</span>
                   </div>
                 )}
               </label>
@@ -673,7 +684,7 @@ Respond with this exact JSON structure:
 
             {ocrText && (
               <details className="ocr-preview">
-                <summary>🔍 View extracted text from document</summary>
+                <summary>🔍 {t('registrationPage.extractedText')}</summary>
                 <pre>{ocrText}</pre>
               </details>
             )}
@@ -704,10 +715,10 @@ Respond with this exact JSON structure:
         <div className="registration-main">
           <header className="registration-header">
             <h1>
-              <span className="heading-neuro">Registration</span>{' '}
-              <span className="text-gradient">Hub</span>
+              <span className="heading-neuro">{t('registrationPage.title').split(' ')[0]}</span>{' '}
+              <span className="text-gradient">{t('registrationPage.title').split(' ')[1] || 'Hub'}</span>
             </h1>
-            <p>Practice filling Form 6 — AI scans your documents & reviews your application</p>
+            <p>{t('registrationPage.subtitle')}</p>
           </header>
 
           <div className="step-indicator">

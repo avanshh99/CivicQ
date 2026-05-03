@@ -34,7 +34,7 @@ export async function loadPollingData() {
     return;
   }
 
-  console.log('⏳ Loading polling stations from out.csv into memory...');
+  console.log('Loading polling stations from out.csv into memory...');
   
   try {
     // Read entire file synchronously (takes ~1-2 seconds for 140MB)
@@ -67,7 +67,7 @@ export async function loadPollingData() {
     }
     
     isDataLoaded = true;
-    console.log(`✅ Successfully loaded ${pollingStations.length} polling stations.`);
+    console.log(`Successfully loaded ${pollingStations.length} polling stations.`);
   } catch (error) {
     console.error('❌ Error loading CSV data:', error);
   }

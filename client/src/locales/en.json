@@ -1,0 +1,86 @@
+{
+  "nav": {
+    "home": "Home",
+    "chat": "Ask CivicQ",
+    "walkthrough": "Learn",
+    "timeline": "Timeline",
+    "scenarios": "Scenarios",
+    "polling": "Polling",
+    "registration": "Registration Hub",
+    "signIn": "Sign In",
+    "skipToContent": "Skip to main content",
+    "language": "Language"
+  },
+  "common": {
+    "loading": "Loading..."
+  },
+  "home": {
+    "heroBadge": "AI-Powered Election Assistant",
+    "heroTitle1": "Understand Elections",
+    "heroTitle2": "Like Never Before",
+    "heroSubtitle": "Your intelligent guide to the democratic process. Learn about voter registration, voting procedures, timelines, and more — all in simple, clear language.",
+    "askBtn": "Ask CivicQ",
+    "startBtn": "Start Learning",
+    "featuresTitle": "Everything You Need",
+    "featuresSubtitle": "Interactive tools designed to make civic education accessible and engaging for everyone.",
+    "features": {
+      "f1Title": "AI Chat Assistant",
+      "f1Desc": "Ask anything about elections. Get clear, accurate answers powered by AI with follow-up support.",
+      "f2Title": "Step-by-Step Guide",
+      "f2Desc": "Walk through the entire election process from registration to results.",
+      "f3Title": "Interactive Timeline",
+      "f3Desc": "Visual election timelines with key dates, deadlines, and milestones.",
+      "f4Title": "Scenario Simulator",
+      "f4Desc": "\"What if I miss registration?\" Explore real scenarios and consequences.",
+      "f5Title": "Polling Finder",
+      "f5Desc": "Find your nearest polling station with Google Maps integration.",
+      "f6Title": "Track Progress",
+      "f6Desc": "Earn badges as you learn. Track your civic knowledge journey."
+    },
+    "stats": {
+      "s1Value": "900M+",
+      "s1Label": "Voters in India",
+      "s2Value": "1M+",
+      "s2Label": "Polling Stations",
+      "s3Value": "543",
+      "s3Label": "Constituencies",
+      "s4Value": "2,600+",
+      "s4Label": "Political Parties"
+    },
+    "ctaTitle": "Ready to Become a Civic Expert?",
+    "ctaDesc": "Start your journey to understanding democracy. Ask questions, explore timelines, and earn your civic badges.",
+    "ctaBtn": "Get Started Free"
+  },
+  "chatPage": {
+    "title": "CivicQ Assistant",
+    "statusOnline": "Online — Ready to help",
+    "clearBtn": "🗑️ Clear",
+    "placeholder": "Ask about elections, voting, registration...",
+    "sendBtn": "➤",
+    "chips": {
+      "register": "How do I register to vote?",
+      "vote": "What is the voting process?",
+      "timeline": "Show me the election timeline",
+      "count": "How are votes counted?"
+    }
+  },
+  "registrationPage": {
+    "title": "Registration Hub",
+    "subtitle": "Smart verification for your voter registration documents.",
+    "docUploadTitle": "Upload Document",
+    "docUploadSubtitle": "Upload your Aadhaar or Voter ID for instant AI verification.",
+    "dragDrop": "Drag & drop or click to upload",
+    "supportedFormats": "Supports PDF, JPG, PNG",
+    "extractedText": "Extracted Text Preview",
+    "aiAnalysis": "AI Analysis",
+    "verifyBtn": "Verify with AI",
+    "verifying": "Verifying...",
+    "formDetails": "Form 6 Details",
+    "formSubtitle": "Your application details",
+    "nameLabel": "Full Name",
+    "dobLabel": "Date of Birth",
+    "summaryTitle": "Summary",
+    "docVerTitle": "Document Verification",
+    "dataVerTitle": "Data Verification"
+  }
+}

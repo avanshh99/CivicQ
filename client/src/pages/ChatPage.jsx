@@ -1,14 +1,22 @@
 import { useState, useContext, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ChatContext } from '../store/ChatContext.jsx';
 import ChatBubble, { TypingIndicator } from '../components/ChatBubble/ChatBubble.jsx';
-import { SUGGESTION_CHIPS } from '../data/electionData.js';
 import './ChatPage.css';
 
 export default function ChatPage() {
+  const { t } = useTranslation();
   const { messages, isLoading, sendMessage, clearMessages } = useContext(ChatContext);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+
+  const SUGGESTION_CHIPS = [
+    { label: t('chatPage.chips.register'), query: 'How do I register to vote?' },
+    { label: t('chatPage.chips.vote'), query: 'What is the voting process?' },
+    { label: t('chatPage.chips.timeline'), query: 'Show me the election timeline' },
+    { label: t('chatPage.chips.count'), query: 'How are votes counted?' },
+  ];
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -57,10 +65,10 @@ export default function ChatPage() {
         <div className="chat-header-title">
           <span style={{ fontSize: '1.5rem' }} aria-hidden="true">🏛️</span>
           <div>
-            <h2>CivicQ Assistant</h2>
+            <h2>{t('chatPage.title')}</h2>
             <div className="chat-status">
               <span className="chat-status-dot" aria-hidden="true" />
-              <span>Online — Ready to help</span>
+              <span>{t('chatPage.statusOnline')}</span>
             </div>
           </div>
         </div>
@@ -69,7 +77,7 @@ export default function ChatPage() {
           onClick={clearMessages}
           aria-label="Clear chat history"
         >
-          🗑️ Clear
+          {t('chatPage.clearBtn')}
         </button>
       </div>
 
@@ -108,7 +116,7 @@ export default function ChatPage() {
           <textarea
             ref={inputRef}
             className="chat-input"
-            placeholder="Ask about elections, voting, registration..."
+            placeholder={t('chatPage.placeholder')}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -122,7 +130,7 @@ export default function ChatPage() {
             disabled={!input.trim() || isLoading}
             aria-label="Send message"
           >
-            ➤
+            {t('chatPage.sendBtn')}
           </button>
         </div>
       </div>
