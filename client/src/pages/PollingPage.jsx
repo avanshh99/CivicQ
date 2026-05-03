@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -32,6 +33,7 @@ function ChangeView({ center, zoom }) {
 }
 
 export default function PollingPage() {
+  const { t } = useTranslation();
   const [location, setLocation] = useState([20.5937, 78.9629]); // Default to India center
   const [stations, setStations] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -109,17 +111,17 @@ export default function PollingPage() {
     <main className="polling-page" role="main" aria-label="Find Polling Stations">
       <header className="polling-header">
         <h1>
-          <span className="heading-neuro">Find Your</span>{' '}
-          <span className="text-gradient">Polling Station</span>
+          <span className="heading-neuro">{t('pollingPage.title')}</span>{' '}
+          <span className="text-gradient">{t('pollingPage.titleAccent')}</span>
         </h1>
         <p className="polling-subtitle">
-          Locate your nearest polling station using OpenStreetMap. Search for your area or allow browser geolocation.
+          {t('pollingPage.subtitle')}
         </p>
 
         <form className="polling-search-bar" onSubmit={handleSearch}>
           <input
             type="text"
-            placeholder="Search location (e.g. Kothagudem, Telangana)"
+            placeholder={t('pollingPage.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             disabled={searchLoading || loading}
@@ -129,14 +131,14 @@ export default function PollingPage() {
             variant="primary" 
             disabled={searchLoading || loading || !searchQuery.trim()}
           >
-            {searchLoading ? 'Searching...' : 'Search'}
+            {searchLoading ? t('pollingPage.searchingBtn') : t('pollingPage.searchBtn')}
           </Button>
         </form>
 
         <div className="polling-actions">
           {!hasLocation && (
             <Button variant="secondary" onClick={locateUser} disabled={loading || searchLoading}>
-              {loading ? 'Locating...' : '📍 Use My Current Location'}
+              {loading ? t('pollingPage.locatingBtn') : t('pollingPage.useLocationBtn')}
             </Button>
           )}
         </div>
@@ -182,7 +184,7 @@ export default function PollingPage() {
         <div className="polling-info-grid">
           <Card variant="bento" className="polling-info-card">
             <div className="polling-info-icon" aria-hidden="true">🪪</div>
-            <h3>What to Bring</h3>
+            <h3>{t('pollingPage.whatToBring')}</h3>
             <ul className="polling-list">
               <li>Voter ID Card (EPIC)</li>
               <li>Any approved photo ID</li>
@@ -191,7 +193,7 @@ export default function PollingPage() {
           </Card>
           <Card variant="bento" className="polling-info-card">
             <div className="polling-info-icon" aria-hidden="true">⏰</div>
-            <h3>Polling Hours</h3>
+            <h3>{t('pollingPage.pollingHours')}</h3>
             <ul className="polling-list">
               <li>Typically 7:00 AM - 6:00 PM</li>
               <li>Arrive early to avoid long queues</li>
@@ -200,7 +202,7 @@ export default function PollingPage() {
           </Card>
           <Card variant="bento" className="polling-info-card">
             <div className="polling-info-icon" aria-hidden="true">♿</div>
-            <h3>Accessibility</h3>
+            <h3>{t('pollingPage.accessibility')}</h3>
             <ul className="polling-list">
               <li>Wheelchair ramps at polling stations</li>
               <li>Braille-enabled EVMs available</li>

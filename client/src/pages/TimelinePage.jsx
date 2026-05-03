@@ -1,18 +1,20 @@
+import { useTranslation } from 'react-i18next';
 import Timeline from '../components/Timeline/Timeline.jsx';
 import { ELECTION_TIMELINE } from '../data/electionData.js';
 import './TimelinePage.css';
 
 export default function TimelinePage() {
+  const { t } = useTranslation();
+
   return (
     <main className="timeline-page" role="main" aria-label="Election Timeline">
       <header className="timeline-header">
         <h1>
-          <span className="heading-neuro">Election</span>{' '}
-          <span className="text-gradient">Timeline</span>
+          <span className="heading-neuro">{t('timelinePage.title')}</span>{' '}
+          <span className="text-gradient">{t('timelinePage.titleAccent')}</span>
         </h1>
         <p className="timeline-subtitle">
-          Follow the complete election journey from announcement to government formation.
-          Click on any milestone to learn more.
+          {t('timelinePage.subtitle')}
         </p>
       </header>
 
@@ -23,15 +25,15 @@ export default function TimelinePage() {
       <div className="timeline-legend">
         <div className="legend-item">
           <span className="legend-dot legend-completed" />
-          <span>Completed</span>
+          <span>{t('timelinePage.legendCompleted')}</span>
         </div>
         <div className="legend-item">
           <span className="legend-dot legend-active" />
-          <span>Current Phase</span>
+          <span>{t('timelinePage.legendActive')}</span>
         </div>
         <div className="legend-item">
           <span className="legend-dot legend-upcoming" />
-          <span>Upcoming</span>
+          <span>{t('timelinePage.legendUpcoming')}</span>
         </div>
       </div>
     </main>

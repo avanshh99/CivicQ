@@ -1,11 +1,13 @@
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Card from '../components/Card/Card.jsx';
 import { ChatContext } from '../store/ChatContext.jsx';
 import { SCENARIOS } from '../data/electionData.js';
 import './ScenariosPage.css';
 
 export default function ScenariosPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { sendMessage } = useContext(ChatContext);
 
@@ -18,12 +20,11 @@ export default function ScenariosPage() {
     <main className="scenarios-page" role="main" aria-label="Scenario Simulations">
       <header className="scenarios-header">
         <h1>
-          <span className="heading-neuro">What If</span>{' '}
-          <span className="text-gradient">Scenarios</span>
+          <span className="heading-neuro">{t('scenariosPage.title')}</span>{' '}
+          <span className="text-gradient">{t('scenariosPage.titleAccent')}</span>
         </h1>
         <p className="scenarios-subtitle">
-          Explore real-world scenarios and understand what happens in different election situations.
-          Click any scenario to get a detailed AI-powered explanation.
+          {t('scenariosPage.subtitle')}
         </p>
       </header>
 
@@ -42,7 +43,7 @@ export default function ScenariosPage() {
             <h3 className="scenario-title">{scenario.title}</h3>
             <p className="scenario-question">{scenario.question}</p>
             <div className="scenario-cta">
-              <span>Explore →</span>
+              <span>{t('scenariosPage.explore')}</span>
             </div>
           </Card>
         ))}

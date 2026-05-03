@@ -23,20 +23,20 @@ const TUTORIAL_VIDEOS = [
   {
     id: 1,
     title: 'How to Apply for Voter ID Card Online',
-    videoId: 'OJtmNBgpvCI',
-    duration: '4:32'
+    videoId: 'aQ0ZB2-U_-I',
+    duration: '18:51'
   },
   {
     id: 2,
     title: 'How to Fill Form 6 — Step by Step',
-    videoId: 'pCVZnMFMbNk',
-    duration: '6:15'
+    videoId: '4IfW6fLDgts',
+    duration: '14:49'
   },
   {
     id: 3,
     title: 'Documents Required for Voter Registration',
-    videoId: '1pXp3JJfSSE',
-    duration: '3:48'
+    videoId: 'j46gEoqzuRY',
+    duration: '2:49'
   }
 ];
 

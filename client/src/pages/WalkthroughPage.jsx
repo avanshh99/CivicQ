@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Confetti from 'react-confetti';
 import Button from '../components/Button/Button.jsx';
 import Card from '../components/Card/Card.jsx';
@@ -7,6 +8,7 @@ import { ELECTION_STEPS } from '../data/electionData.js';
 import './WalkthroughPage.css';
 
 export default function WalkthroughPage() {
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(0);
   const [eli5Mode, setEli5Mode] = useState(false);
   const [completedSteps, setCompletedSteps] = useState(new Set());
@@ -56,10 +58,10 @@ export default function WalkthroughPage() {
       )}
       <header className="walkthrough-header">
         <h1>
-          <span className="heading-neuro">Election Process</span>{' '}
-          <span className="text-gradient">Step by Step</span>
+          <span className="heading-neuro">{t('walkthroughPage.title')}</span>{' '}
+          <span className="text-gradient">{t('walkthroughPage.titleAccent')}</span>
         </h1>
-        <p>Walk through the entire democratic process — from registration to results.</p>
+        <p>{t('walkthroughPage.subtitle')}</p>
       </header>
 
       {/* Progress */}
@@ -83,7 +85,7 @@ export default function WalkthroughPage() {
             </button>
           ))}
         </div>
-        <ProgressBar value={progress} max={100} label="Your Progress" />
+        <ProgressBar value={progress} max={100} label={t('walkthroughPage.progressLabel')} />
       </div>
 
       {/* Step Detail */}
@@ -99,7 +101,7 @@ export default function WalkthroughPage() {
 
           {/* ELI5 Toggle */}
           <div className="eli5-toggle">
-            <span className={`eli5-toggle-label ${!eli5Mode ? 'active' : ''}`}>📚 Detailed</span>
+            <span className={`eli5-toggle-label ${!eli5Mode ? 'active' : ''}`}>📚 {t('walkthroughPage.officialDetails')}</span>
             <button
               className={`toggle-switch ${eli5Mode ? 'active' : ''}`}
               onClick={() => setEli5Mode(!eli5Mode)}
@@ -107,7 +109,7 @@ export default function WalkthroughPage() {
               aria-checked={eli5Mode}
               aria-label="Toggle simple explanation mode"
             />
-            <span className={`eli5-toggle-label ${eli5Mode ? 'active' : ''}`}>🧒 Simple</span>
+            <span className={`eli5-toggle-label ${eli5Mode ? 'active' : ''}`}>🧒 {t('walkthroughPage.explainSimple')}</span>
           </div>
 
           <div className="step-content" dangerouslySetInnerHTML={{
@@ -134,14 +136,14 @@ export default function WalkthroughPage() {
             disabled={currentStep === 0}
             icon="←"
           >
-            Previous
+            {t('walkthroughPage.backBtn')}
           </Button>
           <Button
             variant="primary"
             onClick={nextStep}
             iconRight="→"
           >
-            {currentStep === ELECTION_STEPS.length - 1 ? 'Complete!' : 'Next Step'}
+            {currentStep === ELECTION_STEPS.length - 1 ? t('walkthroughPage.finishBtn') : t('walkthroughPage.nextBtn')}
           </Button>
         </div>
       </div>

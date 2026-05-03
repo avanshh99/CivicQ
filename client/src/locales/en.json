@@ -82,5 +82,43 @@
     "summaryTitle": "Summary",
     "docVerTitle": "Document Verification",
     "dataVerTitle": "Data Verification"
+  },
+  "walkthroughPage": {
+    "title": "Election Process",
+    "titleAccent": "Step by Step",
+    "subtitle": "Walk through the entire democratic process — from registration to results.",
+    "progressLabel": "Your Progress",
+    "explainSimple": "Explain Like I'm 5",
+    "officialDetails": "Official Details",
+    "backBtn": "← Back",
+    "nextBtn": "Next Step →",
+    "finishBtn": "🎉 Finish Walkthrough"
+  },
+  "timelinePage": {
+    "title": "Election",
+    "titleAccent": "Timeline",
+    "subtitle": "Follow the complete election journey from announcement to government formation. Click on any milestone to learn more.",
+    "legendCompleted": "Completed",
+    "legendActive": "Current Phase",
+    "legendUpcoming": "Upcoming"
+  },
+  "pollingPage": {
+    "title": "Find Your",
+    "titleAccent": "Polling Station",
+    "subtitle": "Locate your nearest polling station using OpenStreetMap. Search for your area or allow browser geolocation.",
+    "searchPlaceholder": "Search location (e.g. Kothagudem, Telangana)",
+    "searchBtn": "Search",
+    "searchingBtn": "Searching...",
+    "useLocationBtn": "📍 Use My Current Location",
+    "locatingBtn": "Locating...",
+    "whatToBring": "What to Bring",
+    "pollingHours": "Polling Hours",
+    "accessibility": "Accessibility"
+  },
+  "scenariosPage": {
+    "title": "What If",
+    "titleAccent": "Scenarios",
+    "subtitle": "Explore real-world scenarios and understand what happens in different election situations. Click any scenario to get a detailed AI-powered explanation.",
+    "explore": "Explore →"
   }
 }
