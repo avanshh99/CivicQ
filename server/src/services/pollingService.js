@@ -4,7 +4,7 @@ import { createReadStream } from 'fs';
 import { createInterface } from 'readline';
 
 // In-memory store for polling stations
-// Using typed arrays for lat/lng to save RAM, and a separate array for metadata
+// Using typed arrays for lat/lng to save RAM, and separate arrays for metadata
 let lats = null;
 let lngs = null;
 let names = [];
@@ -30,56 +30,38 @@ function getDistance(lat1, lon1, lat2, lon2) {
 }
 
 /**
- * Load CSV data into memory using streaming to avoid heap overflow.
- * Uses Float32Arrays for coordinates to cut memory usage in half.
+ * Load compressed JSONL data into memory using streaming.
  */
 export async function loadPollingData() {
   if (isDataLoaded) return;
   
-  const csvPath = path.resolve(process.cwd(), 'out.csv');
+  const jsonlPath = path.resolve(process.cwd(), 'polling_data.jsonl');
   
-  if (!fs.existsSync(csvPath)) {
-    console.warn('⚠️  out.csv not found. Polling map will use empty data.');
+  if (!fs.existsSync(jsonlPath)) {
+    console.warn('⚠️  polling_data.jsonl not found. Polling map will use empty data.');
     return;
   }
 
-  console.log('Loading polling stations from out.csv (streaming)...');
+  console.log('Loading polling stations from polling_data.jsonl (streaming)...');
   
-  // First pass: count lines to pre-allocate typed arrays
-  let lineCount = 0;
   const tempData = [];
-
   try {
     const rl = createInterface({
-      input: createReadStream(csvPath, { encoding: 'utf8' }),
+      input: createReadStream(jsonlPath, { encoding: 'utf8' }),
       crlfDelay: Infinity,
     });
 
-    let isHeader = true;
     for await (const line of rl) {
-      if (isHeader) { isHeader = false; continue; }
       if (!line) continue;
-
-      const cleanLine = line.replace(/^"|"$/g, '');
-      const cols = cleanLine.split('","');
-
-      if (cols.length >= 7) {
-        const lat = parseFloat(cols[3]);
-        const lng = parseFloat(cols[4]);
-
-        if (!isNaN(lat) && !isNaN(lng)) {
-          tempData.push({
-            lat, lng,
-            id: cols[5] || lineCount.toString(),
-            state: cols[0],
-            ac: cols[2],
-            name: cols[6]
-          });
-          lineCount++;
-        }
+      try {
+        const [lat, lng, name, state, ac, id] = JSON.parse(line);
+        tempData.push({ lat, lng, name, state, ac, id });
+      } catch (e) {
+        // Skip malformed lines
       }
     }
 
+    const lineCount = tempData.length;
     // Allocate typed arrays for coordinates (4 bytes each instead of 8)
     lats = new Float32Array(lineCount);
     lngs = new Float32Array(lineCount);
@@ -104,16 +86,12 @@ export async function loadPollingData() {
     isDataLoaded = true;
     console.log(`Successfully loaded ${stationCount} polling stations.`);
   } catch (error) {
-    console.error('❌ Error loading CSV data:', error);
+    console.error('❌ Error loading polling data:', error);
   }
 }
 
 /**
  * Get nearest stations to a coordinate
- * @param {number} userLat 
- * @param {number} userLng 
- * @param {number} limit Max number of stations to return
- * @param {number} maxDistanceMiles Max search radius in miles
  */
 export function getNearestStations(userLat, userLng, limit = 20, maxDistanceMiles = 50) {
   if (!isDataLoaded) return [];
