@@ -20,6 +20,9 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 
+// Trust the first proxy (Render uses a proxy)
+app.set('trust proxy', 1);
+
 loadPollingData();
 
 // ---- CORS (must be BEFORE helmet) ----
