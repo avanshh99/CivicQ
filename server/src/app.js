@@ -22,18 +22,12 @@ const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 
 loadPollingData();
 
-// ---- Security Middleware ----
-app.use(helmet({
-  contentSecurityPolicy: false, // Allow inline styles for dev
-}));
+// ---- CORS (must be BEFORE helmet) ----
 const ALLOWED_ORIGINS = [CLIENT_URL, 'http://127.0.0.1:5173', 'http://localhost:5173'];
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    
-    // Automatically allow any netlify app for ease of deployment, or match the explicitly allowed origins
     if (origin.endsWith('.netlify.app') || ALLOWED_ORIGINS.includes(origin)) {
       callback(null, true);
     } else {
@@ -41,6 +35,12 @@ app.use(cors({
     }
   },
   credentials: true,
+}));
+
+// ---- Security Middleware (after CORS) ----
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
 }));
 app.use(compression());
 app.use(express.json({ limit: '1mb' }));
