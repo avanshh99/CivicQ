@@ -1,6 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import Confetti from 'react-confetti';
+import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { db } from '../firebase.js';
+import { AuthContext } from '../store/AuthContext.jsx';
 import Button from '../components/Button/Button.jsx';
 import Card from '../components/Card/Card.jsx';
 import { ProgressBar } from '../components/Badge/Badge.jsx';
@@ -9,10 +12,14 @@ import './WalkthroughPage.css';
 
 export default function WalkthroughPage() {
   const { t } = useTranslation();
+  const { user } = useContext(AuthContext);
   const [currentStep, setCurrentStep] = useState(0);
   const [eli5Mode, setEli5Mode] = useState(false);
   const [completedSteps, setCompletedSteps] = useState(new Set());
   const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+  
+  // Ref to track if we already awarded the badge to avoid multiple writes
+  const awardedBadge = useRef(false);
 
   useEffect(() => {
     const handleResize = () => setWindowSize({ width: window.innerWidth, height: window.innerHeight });
@@ -24,13 +31,39 @@ export default function WalkthroughPage() {
   const progress = (completedSteps.size / ELECTION_STEPS.length) * 100;
   const isCompleted = progress === 100;
 
+  const markStepComplete = async (stepIndex) => {
+    if (completedSteps.has(stepIndex)) return;
+    
+    const newCompleted = new Set([...completedSteps, stepIndex]);
+    setCompletedSteps(newCompleted);
+
+    if (user?.uid) {
+      try {
+        const userRef = doc(db, 'users', user.uid);
+        const updates = {
+          stepsCompleted: newCompleted.size
+        };
+        
+        // Award badge if all steps completed
+        if (newCompleted.size === ELECTION_STEPS.length && !awardedBadge.current) {
+          updates.badges = arrayUnion('civic-scholar'); // Assuming 'civic-scholar' is a badge
+          awardedBadge.current = true;
+        }
+        
+        await updateDoc(userRef, updates);
+      } catch (err) {
+        console.error("Failed to sync progress:", err);
+      }
+    }
+  };
+
   const goToStep = (idx) => {
     setCurrentStep(idx);
-    setCompletedSteps((prev) => new Set([...prev, currentStep]));
+    markStepComplete(currentStep);
   };
 
   const nextStep = () => {
-    setCompletedSteps((prev) => new Set([...prev, currentStep]));
+    markStepComplete(currentStep);
     if (currentStep < ELECTION_STEPS.length - 1) setCurrentStep(currentStep + 1);
   };
 
