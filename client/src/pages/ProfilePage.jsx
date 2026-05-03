@@ -63,7 +63,7 @@ export default function ProfilePage() {
 
       <div className="profile-grid">
         {/* User Info */}
-        <Card variant="glass" className="profile-user-card">
+        <Card variant="neuro" className="profile-user-card">
           <div className="profile-avatar-wrapper">
             {user.photoURL ? (
               <img
@@ -102,7 +102,7 @@ export default function ProfilePage() {
         </Card>
 
         {/* Progress */}
-        <Card variant="glass" className="profile-progress-card">
+        <Card variant="neuro" className="profile-progress-card">
           <h3>Learning Progress</h3>
           <div className="profile-progress-items">
             <ProgressBar value={stepsCompleted} max={totalSteps} label="Walkthrough" />
@@ -112,7 +112,7 @@ export default function ProfilePage() {
         </Card>
 
         {/* Badges */}
-        <Card variant="glass" className="profile-badges-card">
+        <Card variant="neuro" className="profile-badges-card">
           <h3>Badges</h3>
           <div className="profile-badges-grid">
             {GAMIFICATION_BADGES.map((badge) => (

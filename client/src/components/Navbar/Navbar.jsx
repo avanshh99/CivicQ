@@ -66,14 +66,14 @@ export default function Navbar({ user, onLogout }) {
 
         <ThemeToggle />
         {user ? (
-          <button
+          <Link
+            to="/profile"
             className="navbar-user"
-            onClick={onLogout}
-            aria-label={`Logged in as ${user.displayName || user.email}. Click to logout.`}
-            title="Logout"
+            aria-label={`Logged in as ${user.displayName || user.email}. Click to view profile.`}
+            title="View Profile"
           >
             {(user.displayName || user.email || 'U')[0].toUpperCase()}
-          </button>
+          </Link>
         ) : (
           <Link to="/login" className="btn btn-primary btn-sm">{t('nav.signIn')}</Link>
         )}

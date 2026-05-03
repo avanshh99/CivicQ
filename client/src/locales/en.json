@@ -115,8 +115,8 @@
     "progressLabel": "Your Progress",
     "explainSimple": "Explain Like I'm 5",
     "officialDetails": "Official Details",
-    "backBtn": "← Back",
-    "nextBtn": "Next Step →",
+    "backBtn": "Back",
+    "nextBtn": "Next Step",
     "finishBtn": "🎉 Finish Walkthrough"
   },
   "timelinePage": {
