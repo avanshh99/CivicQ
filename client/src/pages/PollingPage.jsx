@@ -34,6 +34,7 @@ function ChangeView({ center, zoom }) {
 
 export default function PollingPage() {
   const { t } = useTranslation();
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
   const [location, setLocation] = useState([20.5937, 78.9629]); // Default to India center
   const [stations, setStations] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -44,7 +45,7 @@ export default function PollingPage() {
   const fetchStations = async (lat, lng) => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:3001/api/polling/nearby', {
+      const res = await fetch(`${API_URL}/api/polling/nearby`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ lat, lng }),

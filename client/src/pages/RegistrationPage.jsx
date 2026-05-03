@@ -187,6 +187,7 @@ function ReviewReport({ data }) {
 
 export default function RegistrationPage() {
   const { t } = useTranslation();
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
   const [step, setStep] = useState(0);
 
   // We move FORM_STEPS inside the component to use the translation hook
@@ -399,7 +400,7 @@ export default function RegistrationPage() {
     setAiLoading(true);
     setAiResponse(null);
     try {
-      const res = await fetch('http://127.0.0.1:3001/api/chat/message', {
+      const res = await fetch(`${API_URL}/api/chat/message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -451,7 +452,7 @@ ${hasOcr ? ocrText : 'NO DOCUMENT TEXT AVAILABLE'}
 Respond with this exact JSON structure:
 {"overallScore":7,"verdict":"review","eligibility":{"ageEligible":true,"note":"Age is 21, eligible"},"documentSummary":"Aadhar card detected with name and address","verificationChecks":[{"field":"Name","formValue":"John Doe","docValue":"John M Doe","match":false}],"issues":["Middle name missing"],"recommendations":["Add middle name"],"summary":"Application is mostly complete."}`;
 
-      const res = await fetch('http://127.0.0.1:3001/api/chat/message', {
+      const res = await fetch(`${API_URL}/api/chat/message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: prompt, mode: 'normal' }),
@@ -549,26 +550,26 @@ Respond with this exact JSON structure:
           <div className="form-section animate-slide-up">
             <div className="form-grid-2">
               <div className="form-group">
-                <label>First Name <button className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('First Name')}>💡</button></label>
+                <label>{t('registrationPage.firstName')} <button type="button" className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('First Name')}>💡</button></label>
                 <input name="firstName" value={formData.firstName} onChange={handleInputChange} placeholder="As per ID document" />
               </div>
               <div className="form-group">
-                <label>Last Name <button className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('Last Name')}>💡</button></label>
+                <label>{t('registrationPage.lastName')} <button type="button" className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('Last Name')}>💡</button></label>
                 <input name="lastName" value={formData.lastName} onChange={handleInputChange} placeholder="Surname" />
               </div>
             </div>
 
             <div className="form-grid-3">
               <div className="form-group">
-                <label>Date of Birth <button className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('Date of Birth')}>💡</button></label>
+                <label>{t('registrationPage.dob')} <button type="button" className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('Date of Birth')}>💡</button></label>
                 <input type="date" name="dob" value={formData.dob} onChange={handleInputChange} />
               </div>
               <div className="form-group">
-                <label>Age</label>
+                <label>{t('registrationPage.age')}</label>
                 <input value={age ? `${age} years` : '—'} readOnly className="readonly-input" />
               </div>
               <div className="form-group">
-                <label>Gender <button className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('Gender')}>💡</button></label>
+                <label>{t('registrationPage.gender')} <button type="button" className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('Gender')}>💡</button></label>
                 <select name="gender" value={formData.gender} onChange={handleInputChange}>
                   <option value="">Select</option>
                   {GENDERS.map(g => <option key={g}>{g}</option>)}
@@ -578,27 +579,27 @@ Respond with this exact JSON structure:
 
             <div className="form-grid-2">
               <div className="form-group">
-                <label>Blood Group <button className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('Blood Group')}>💡</button></label>
+                <label>{t('registrationPage.bloodGroup')} <button type="button" className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('Blood Group')}>💡</button></label>
                 <select name="bloodGroup" value={formData.bloodGroup} onChange={handleInputChange}>
                   <option value="">Select</option>
                   {BLOOD_GROUPS.map(b => <option key={b}>{b}</option>)}
                 </select>
               </div>
               <div className="form-group">
-                <label>Mobile Number <button className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('Mobile Number')}>💡</button></label>
+                <label>{t('registrationPage.mobile')} <button type="button" className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('Mobile Number')}>💡</button></label>
                 <input name="mobile" value={formData.mobile} onChange={handleInputChange} placeholder="+91 XXXXX XXXXX" maxLength={13} />
               </div>
             </div>
 
             <div className="form-grid-2">
               <div className="form-group">
-                <label>Relation Type <button className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('Relation Type (Father/Husband name)')}>💡</button></label>
+                <label>{t('registrationPage.relationType')} <button type="button" className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('Relation Type (Father/Husband name)')}>💡</button></label>
                 <select name="relationType" value={formData.relationType} onChange={handleInputChange}>
                   {RELATION_TYPES.map(r => <option key={r}>{r}</option>)}
                 </select>
               </div>
               <div className="form-group">
-                <label>Relation's Name</label>
+                <label>{t('registrationPage.relationName')}</label>
                 <input name="relationName" value={formData.relationName} onChange={handleInputChange} placeholder="Name as per ID" />
               </div>
             </div>
@@ -609,25 +610,25 @@ Respond with this exact JSON structure:
         return (
           <div className="form-section animate-slide-up">
             <div className="form-group">
-              <label>Full Address <button className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('Residential Address')}>💡</button></label>
+              <label>{t('registrationPage.fullAddress')} <button type="button" className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('Residential Address')}>💡</button></label>
               <textarea name="address" value={formData.address} onChange={handleInputChange} placeholder="House/Flat No, Street Name, Landmark..." rows="3" />
             </div>
             <div className="form-grid-3">
               <div className="form-group">
-                <label>City / Town</label>
+                <label>{t('registrationPage.city')}</label>
                 <input name="city" value={formData.city} onChange={handleInputChange} />
               </div>
               <div className="form-group">
-                <label>State</label>
+                <label>{t('registrationPage.state')}</label>
                 <input name="state" value={formData.state} onChange={handleInputChange} />
               </div>
               <div className="form-group">
-                <label>PIN Code <button className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('PIN Code')}>💡</button></label>
+                <label>{t('registrationPage.pincode')} <button type="button" className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('PIN Code')}>💡</button></label>
                 <input name="pincode" value={formData.pincode} onChange={handleInputChange} maxLength={6} placeholder="6-digit" />
               </div>
             </div>
             <div className="form-group">
-              <label>Email Address (Optional)</label>
+              <label>{t('registrationPage.email')}</label>
               <input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="For ECI notifications" />
             </div>
           </div>
@@ -637,7 +638,7 @@ Respond with this exact JSON structure:
         return (
           <div className="form-section animate-slide-up">
             <div className="form-group">
-              <label>Primary ID Proof Type <button className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('Identity and Age Proof document')}>💡</button></label>
+              <label>{t('registrationPage.primaryId')} <button type="button" className="ai-info-btn" title="AI Help" onClick={() => getAiInfo('Identity and Age Proof document')}>💡</button></label>
               <select name="docType" value={formData.docType} onChange={handleInputChange}>
                 <option>Aadhar Card</option>
                 <option>PAN Card</option>
@@ -698,7 +699,7 @@ Respond with this exact JSON structure:
               <ReviewReport data={reviewResult} />
             ) : (
               <div className="review-placeholder">
-                <span>No review generated yet.</span>
+                <span>{t('registrationPage.noReview')}</span>
               </div>
             )}
           </div>
@@ -725,7 +726,7 @@ Respond with this exact JSON structure:
             {FORM_STEPS.map((s, i) => (
               <div key={s.id} className={`step-item ${i === step ? 'active' : ''} ${i < step ? 'completed' : ''}`}>
                 <span className="step-icon">{s.icon}</span>
-                <span className="step-label">{s.title}</span>
+                <span className="step-label">{t(`registrationPage.step${i+1}`)}</span>
               </div>
             ))}
           </div>
@@ -746,19 +747,19 @@ Respond with this exact JSON structure:
 
             <div className="form-footer">
               {step > 0 && step < 3 && (
-                <Button variant="secondary" onClick={() => { setStep(step - 1); setAiResponse(null); }}>← Back</Button>
+                <Button variant="secondary" onClick={() => { setStep(step - 1); setAiResponse(null); }}>{t('registrationPage.backBtn')}</Button>
               )}
               {step < 2 && (
-                <Button variant="primary" onClick={() => { setStep(step + 1); setAiResponse(null); }}>Next Step →</Button>
+                <Button variant="primary" onClick={() => { setStep(step + 1); setAiResponse(null); }}>{t('registrationPage.nextBtn')}</Button>
               )}
               {step === 2 && (
                 <Button variant="primary" onClick={runAiReview} disabled={aiLoading || ocrLoading}>
-                  {aiLoading ? '🤖 Analyzing...' : '🚀 Generate AI Review'}
+                  {aiLoading ? t('registrationPage.analyzing') : t('registrationPage.genReview')}
                 </Button>
               )}
               {step === 3 && (
                 <Button variant="secondary" onClick={() => { setStep(0); setReviewResult(null); setFile(null); setOcrText(''); }}>
-                  🔄 Start Fresh
+                  {t('registrationPage.startFresh')}
                 </Button>
               )}
             </div>

@@ -26,14 +26,18 @@ loadPollingData();
 app.use(helmet({
   contentSecurityPolicy: false, // Allow inline styles for dev
 }));
-const ALLOWED_ORIGINS = [CLIENT_URL, 'http://127.0.0.1:5173'];
+const ALLOWED_ORIGINS = [CLIENT_URL, 'http://127.0.0.1:5173', 'http://localhost:5173'];
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Automatically allow any netlify app for ease of deployment, or match the explicitly allowed origins
+    if (origin.endsWith('.netlify.app') || ALLOWED_ORIGINS.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
     }
   },
   credentials: true,

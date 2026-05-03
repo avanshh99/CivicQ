@@ -1,7 +1,16 @@
 import fs from 'fs';
 import path from 'path';
+import dotenv from 'dotenv';
 
-const API_KEY = "02f4208ae4msh8a4b4f15df6ab3dp1d4bf9jsn303bdecf623d"; // User's rapidAPI key
+dotenv.config({ path: path.join(process.cwd(), '.env') });
+
+const API_KEY = process.env.RAPIDAPI_KEY;
+if (!API_KEY) {
+  console.error("Please set the RAPIDAPI_KEY environment variable before running this script.");
+  console.error("Example: RAPIDAPI_KEY=your_key node scripts/translateApp.js");
+  process.exit(1);
+}
+
 const API_URL = "https://openl-translate.p.rapidapi.com/translate/bulk";
 
 // Target languages user requested
