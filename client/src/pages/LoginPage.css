@@ -15,6 +15,17 @@
   pointer-events: none;
 }
 
+.login-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(79, 70, 229, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79, 70, 229, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%);
+}
+
 .login-orb {
   position: absolute;
   border-radius: 50%;
@@ -61,17 +72,56 @@
 .login-logo {
   font-size: 3rem;
   margin-bottom: var(--space-4);
+  animation: float 4s ease-in-out infinite;
 }
 
 .login-title {
   font-size: var(--text-3xl);
   margin-bottom: var(--space-2);
+  background: linear-gradient(135deg, var(--color-text) 0%, var(--color-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .login-subtitle {
   color: var(--color-text-secondary);
   font-size: var(--text-sm);
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-6);
+}
+
+/* Google Sign-In Button */
+.google-signin-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.google-signin-btn:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 12px rgba(79, 70, 229, 0.1);
+  transform: translateY(-1px);
+}
+
+.google-signin-btn:active {
+  transform: translateY(0);
+}
+
+.google-signin-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .login-form {
@@ -114,11 +164,27 @@
 }
 
 .form-error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   padding: var(--space-3) var(--space-4);
   background: var(--color-error-bg);
   color: var(--color-error);
   border-radius: var(--radius-md);
   font-size: var(--text-sm);
+  animation: shake 0.4s ease;
+}
+
+.form-error-icon {
+  flex-shrink: 0;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
 }
 
 .login-submit {
@@ -130,7 +196,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-4);
-  margin: var(--space-6) 0;
+  margin: var(--space-5) 0;
   color: var(--color-text-tertiary);
   font-size: var(--text-sm);
 }
@@ -141,10 +207,6 @@
   flex: 1;
   height: 1px;
   background: var(--color-border);
-}
-
-.login-google {
-  width: 100%;
 }
 
 .login-switch {
@@ -159,8 +221,16 @@
   background: none;
   border: none;
   cursor: pointer;
+  transition: color var(--transition-fast);
 }
 
 .login-switch-btn:hover {
   text-decoration: underline;
+}
+
+.login-terms {
+  margin-top: var(--space-4);
+  font-size: 0.7rem;
+  color: var(--color-text-tertiary);
+  line-height: 1.5;
 }
