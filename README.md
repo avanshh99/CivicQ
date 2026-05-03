@@ -1,56 +1,57 @@
-# CivicQ: AI-Powered Democratic Assistant & Verification Platform
+# CivicQ
 
-![CivicQ Banner](https://via.placeholder.com/1200x400/4F46E5/FFFFFF?text=CivicQ+-+Empowering+Voters+with+AI)
+CivicQ is an AI-powered civic education and election assistance platform. It is designed to guide users through the democratic process, from understanding voter registration to finding polling stations and exploring election scenarios. The application features a dynamic, multilingual interface and an intelligent chatbot to answer civic queries in real-time.
 
-CivicQ is a next-generation civic education and election assistance platform. It is designed to guide users through the democratic process, from understanding voter registration via intelligent document OCR verification, to finding polling stations, and exploring interactive election scenarios. 
+## Features
 
-> **Hackathon Submission Note**: This README serves both as the project documentation and as a **Comprehensive Architectural & Scaling Analysis**, structured specifically for evaluation across Code Quality, Security, Efficiency, Testing, Accessibility, and Google Services integration.
+- **Multilingual AI Assistant**: An intelligent chatbot powered by Llama-3 (via Groq API) that answers election-related questions natively in English, Hindi, Marathi, Gujarati, and Kannada.
+- **Smart Registration Hub**: Allows users to upload their voter ID or Aadhar card. The system uses Optical Character Recognition (OCR) via Tesseract.js to extract data and provides AI-driven validation of the document.
+- **Polling Station Finder**: An interactive map integrating OpenStreetMap and Leaflet to help users locate nearby polling stations based on their geographical location, powered by highly optimized JSONL data streaming.
+- **Election Walkthrough & Timeline**: Step-by-step guides and interactive timelines detailing the entire electoral process. Gamified with interactive badges synced in real-time.
+- **Scenario Simulator**: A "What If" module that allows users to explore real-world election scenarios and understand their outcomes.
+- **Authentication & Persistence**: Full user accounts via Firebase Auth (Email/Password & Google Sign-in) with real-time profile syncing and chat history persistence via Cloud Firestore.
+- **Localization (i18n)**: Full platform internationalization, seamlessly switching the entire UI and AI context between 5 different languages.
+- **Premium Neobrutalism UI**: A highly polished, interactive user interface featuring bold Neobrutalist design principles, glassmorphism accents, and micro-animations.
 
----
+## Agent Architecture
 
-## 🏛️ System Architecture
-
-CivicQ employs a multi-agent architectural pattern where specialized LLM prompts and traditional deterministic tools handle distinct domains of the civic experience. 
+CivicQ relies on a multi-agent architectural pattern where different specialized prompts and tools handle different domains of the application. 
 
 ```mermaid
 graph TD
     User((User))
     
-    subgraph Frontend [React + Vite]
-        ChatUI[Interactive Chat UI]
-        RegUI[OCR Registration Hub]
+    subgraph Frontend [React Application]
+        ChatUI[Chat Interface]
+        RegUI[Registration Hub]
         ScenUI[Scenario Simulator]
-        AuthUI[Firebase Auth Module]
     end
     
     subgraph Backend [Node.js Express Server]
-        subgraph Agents [AI Service Routing]
-            ChatAgent[Civic Assistant Agent<br/>Groq/Llama-3.3]
-            VerifyAgent[Document Verification Agent<br/>Groq/Llama-3.3]
-            SimAgent[Scenario Simulation Agent<br/>Groq/Llama-3.3]
+        subgraph Agents [AI Service Agents]
+            ChatAgent[Civic Assistant Agent<br/>llama-3.3-70b]
+            VerifyAgent[Document Verification Agent<br/>llama-3.3-70b]
+            SimAgent[Scenario Simulation Agent<br/>llama-3.3-70b]
         end
         
         OCR[Tesseract.js OCR Engine]
-        Stream[JSONL Polling Streamer]
-        Sanitizer[DOMPurify + Injection Detection]
+        Cache[(Response Cache)]
     end
     
-    subgraph Google Cloud [Google Services]
+    subgraph Cloud [Firebase]
         Auth[Firebase Authentication]
-        DB[(Cloud Firestore)]
+        DB[(Firestore Database)]
     end
     
     %% Connections
-    User -->|Logs in| AuthUI
-    AuthUI <--> Auth
-    AuthUI <--> DB
-    
+    User -->|Logs in| Auth
     User <-->|Chats| ChatUI
     User -->|Uploads ID| RegUI
-    User -->|Explores| ScenUI
+    User -->|Creates What-Ifs| ScenUI
     
-    ChatUI <--> Sanitizer
-    Sanitizer <--> ChatAgent
+    ChatUI <--> DB
+    ChatUI --> ChatAgent
+    ChatAgent <--> Cache
     
     RegUI --> OCR
     OCR --> VerifyAgent
@@ -60,92 +61,85 @@ graph TD
     SimAgent --> ScenUI
 ```
 
----
-
-## 🚀 Hackathon Evaluation & System Upgrade Analysis
-
-As a Senior AI Systems Architect, the following is a critical evaluation of CivicQ's current architecture, identifying gaps and providing exact implementation-level blueprints to maximize scoring across all rubrics.
-
-### 1. Critical Gaps & Exact Fixes (Top 5)
-
-| Category | Weakness | Impact on Scoring | Exact Implementation Fix |
-| :--- | :--- | :--- | :--- |
-| **Testing** | Failing Unit Tests & Low Coverage | High (Testing) | *Fix*: Remove legacy Groq logic in tests. Fully implement `vitest` mocking for `aiService.js` and test edge cases in OCR parsing. *File*: `server/tests/unit/aiService.test.js` |
-| **Security** | Missing LLM Guardrails | Critical (Security) | *Fix*: Implement a semantic firewall layer before Groq API calls to reject prompts containing "ignore previous instructions" or highly partisan keywords. |
-| **Google Services** | Unused Gemini Setup | High (Google Services) | *Fix*: The backend has `@google/generative-ai` installed but unused. Refactor `aiService.js` to route primary chat through Gemini 1.5 Pro, maximizing Google ecosystem usage. |
-| **Efficiency** | Redundant LLM Calls | Medium (Efficiency) | *Fix*: Implement an LRU memory cache (`lru-cache`) mapping exact question hashes to recent responses to bypass API calls entirely for common questions. |
-| **Accessibility** | Neobrutalism Contrast Issues | High (Accessibility) | *Fix*: Add `aria-live="polite"` to the Chat UI streaming container. Add `tabIndex={0}` to all interactive Cards. Ensure contrast ratios exceed WCAG AA standards. |
-
-### 2. Security & Trust Layer Upgrade
-
-Civic platforms must be impervious to misinformation and prompt injection. 
-
-*   **Prompt Injection Handling**: Currently handled by basic regex in `sanitizer.js`. **Upgrade**: Route user queries through a lightweight classification model (or a fast Gemini 1.5 Flash call) that strictly outputs `SAFE` or `UNSAFE` before routing to the main generation agent.
-*   **Hallucination Control**: Implement a Retrieval-Augmented Generation (RAG) pattern. Instead of relying on parametric memory, the LLM should ONLY be allowed to answer based on a injected context document containing verified Election Commission facts.
-*   **Safe Fallback Strategy**: If the OCR fails or the query is flagged as political/partisan, the system must trigger a deterministic fallback: *"I am an impartial civic assistant. I can help you with the mechanics of voting, but cannot provide political opinions."*
-
-### 3. Testing System Design
-
-To achieve maximum points in **Validation of Functionality**, the CI/CD pipeline requires:
-
-1.  **API Route Tests (`supertest`)**: Validate rate limiters (`express-rate-limit`) to ensure DDoS protection on the chat endpoints.
-2.  **OCR Validation Tests**: Provide 5 synthetic, low-resolution "mock IDs" and assert that the Tesseract engine + AI verification strictly returns structured JSON.
-3.  **AI Response Evaluation Dataset**:
-    *   *Query*: "How do I register to vote?" -> *Assert*: Contains keywords "Election Commission", "Form 6".
-    *   *Query*: "Who should I vote for?" -> *Assert*: Triggers safety fallback.
-
-### 4. Efficiency Optimization
-
-*   **JSONL Streaming**: The backend currently uses memory-efficient stream parsing for the 71MB `polling_data.jsonl`. **Upgrade**: Introduce a geospatial index (e.g., SQLite with R-Tree or Redis Geo) to turn O(N) linear scans into O(1) lookups based on bounding boxes.
-*   **Token Usage**: Implement prompt compression. Instead of passing the entire chat history, summarize past context using a background worker before feeding it to the main generation agent.
-
-### 5. Google Services Enhancement
-
-*   **Current Usage**: Firebase Authentication (Email/Google), Cloud Firestore (User Progress, Chat persistence).
-*   **Deep Integration Upgrade Blueprint**:
-    *   Replace `react-leaflet` with **Google Maps Javascript API** for robust polling station routing.
-    *   Replace Groq with **Google Gemini 1.5 Pro**, utilizing its massive context window to ingest entire local election handbooks on the fly.
-    *   Implement **Google Analytics for Firebase** to track user drop-off points during the Walkthrough phase to improve UX iteratively.
-
-### 6. Explainability & Transparency Layer
-
-To maximize the **Code Quality & Usability** score, users must trust the AI.
-*   **Source Citations**: Modify the AI system prompt to enforce returning a `sources` array in JSON format. The UI must render these as clickable chips linking to official `.gov` resources.
-*   **Confidence Scores**: The Document Verification Agent (OCR) currently returns raw data. It should return a confidence interval (e.g., `Confidence: 94%`). If <80%, the UI should prompt the user to retake the photo.
-
----
-
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Frontend
 - **Framework**: React with Vite
-- **Styling**: Neobrutalism Aesthetics (Solid colors, hard shadows, high contrast)
-- **State/Auth**: Firebase Client SDK, Context API
-- **Maps**: React-Leaflet
+- **Styling**: Custom CSS (Neobrutalism aesthetics)
+- **Mapping**: React-Leaflet
+- **Localization**: react-i18next
+- **Document Parsing**: pdfjs-dist
+- **Authentication**: Firebase Client SDK
 
 ### Backend
 - **Framework**: Node.js with Express
-- **AI Integration**: Groq API (Configured for Gemini Migration)
-- **Data Optimization**: Node.js Streams parsing 70MB+ JSONL files within 450MB RAM constraints.
-- **Security**: Helmet.js, express-rate-limit, DOMPurify.
+- **AI Integration**: Groq API (llama-3.3-70b-versatile)
+- **OCR**: Tesseract.js
+- **Location Services**: OpenStreetMap / Nominatim API
+- **Data Optimization**: JSONL Streams for memory-efficient large dataset processing
 
-## ⚙️ Getting Started
+## Prerequisites
 
-### 1. Set up Backend
+- Node.js (v18 or higher recommended)
+- A Groq API Key
+- A Firebase Project (with Auth & Firestore enabled)
+- An OpenL Translate RapidAPI Key (for generating translations via scripts)
+
+## Getting Started
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/yourusername/civicq.git
+cd civicq
+```
+
+### 2. Set up the Backend
 ```bash
 cd server
 npm install
-# Create .env with GROQ_API_KEY and PORT=3001
+```
+Create a `.env` file in the `server` directory and add your Groq API key:
+```env
+PORT=3001
+GROQ_API_KEY=your_groq_api_key_here
+CLIENT_URL=http://localhost:5174
+```
+Start the backend server:
+```bash
 npm start
 ```
 
-### 2. Set up Frontend
+### 3. Set up the Frontend
+Open a new terminal window:
 ```bash
 cd client
 npm install
-# Create .env with VITE_API_URL and VITE_FIREBASE_* credentials
+```
+
+Create a `.env` file in the `client` directory and add your keys:
+```env
+VITE_API_URL=http://localhost:3001
+VITE_FIREBASE_API_KEY=your_key
+VITE_FIREBASE_AUTH_DOMAIN=your_domain
+VITE_FIREBASE_PROJECT_ID=your_id
+VITE_FIREBASE_STORAGE_BUCKET=your_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
+
+Start the frontend development server:
+```bash
 npm run dev
 ```
 
-## 📜 License
-MIT License. Built for the Hackathon Submission.
+The application will be running at `http://localhost:5174`.
+
+## Deployment
+
+For production, it is recommended to deploy the frontend and backend separately:
+- **Frontend**: Deploy the `client` directory to a static hosting service like Netlify or Vercel. Be sure to configure all `VITE_*` environment variables to point to your live backend and Firebase config.
+- **Backend**: Deploy the `server` directory to a Node.js hosting provider like Render, Railway, or Heroku. Ensure all environment variables (like `GROQ_API_KEY`) are securely configured.
+
+## License
+
+This project is licensed under the MIT License.
